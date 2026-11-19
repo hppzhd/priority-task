@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  priority-api:
+    build: .
+    ports:
+      - "5000:5000"
+
+  integration-client:
+    image: curlimages/curl:latest
+    depends_on:
+      - priority-api
+    command: ["sh", "-c", "sleep 3 && echo '--- ОТПРАВКА ЗАПРОСА К МОДУЛЮ ---' && curl -X POST http://priority-api:5000/api/v1/prioritize -H 'Content-Type: application/json' -d '{\"tier\":\"VIP\", \"urgency\":\"LOW\", \"problem_type\":\"OTHER\"}'"]
